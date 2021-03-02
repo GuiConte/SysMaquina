@@ -1,0 +1,137 @@
+﻿create database sys_coragem;
+
+use sys_coragem;
+
+
+CREATE TABLE `estado` (
+  `cod_estado` int(11) NOT NULL AUTO_INCREMENT,
+  `estado` varchar(50) DEFAULT NULL,
+  `estado_abreviado` varchar(2) DEFAULT NULL,
+  
+     CONSTRAINT pk_estado
+		PRIMARY KEY(cod_estado)
+  
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+insert into estado (estado,estado_abreviado) values ('São Paulo','SP'),('Minas Gerais','MG'),('Rio de Janeiro','RJ');
+
+CREATE TABLE `cidade` (
+  `cod_cidade` int(11) NOT NULL AUTO_INCREMENT,
+  `cidade` varchar(50) DEFAULT NULL,
+  `cod_estado` int(11) DEFAULT NULL,
+  `cod_IBGE` int(11) DEFAULT NULL,
+  
+   CONSTRAINT pk_cidade
+		PRIMARY KEY(cod_cidade),
+	CONSTRAINT fk_cidade_estado
+		FOREIGN KEY(cod_estado)
+		REFERENCES estado(cod_estado)
+		ON UPDATE RESTRICT
+		ON DELETE RESTRICT
+		
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+insert into cidade (cidade,cod_estado,cod_IBGE) values ('Divinolandia',1,1),('Poços de Caldas',2,2),('Niteroi',3,3),('S.S.Grama',1,4),('Andradas',2,5),('S.J.Boa Vista',1,6);
+
+CREATE TABLE `cliente` (
+  `cod_cliente` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(50) DEFAULT NULL,
+  `endereco` varchar(50) DEFAULT NULL,
+  `cod_cidade` int(11) DEFAULT NULL,
+  `cep` varchar(10) DEFAULT NULL,
+  `telefone` varchar(15) DEFAULT NULL,
+  `rg_ie` varchar(15) DEFAULT NULL,
+  `data_cadastro` date DEFAULT NULL,
+  `obs` blob,
+  `celular` varchar(15) DEFAULT NULL,
+  `usuario` smallint(6) DEFAULT NULL,
+  `bloqueado` char(1) DEFAULT 'F',
+  `prazo` int(11) DEFAULT NULL,
+  `email` varchar(90) DEFAULT NULL,
+  `numero` varchar(10) DEFAULT NULL,
+  `bairro` varchar(20) DEFAULT NULL,
+  `complemento` varchar(40) DEFAULT NULL,
+  `cpf_cnpj` varchar(20) DEFAULT NULL,
+  `tipo_pessoa` smallint(6) DEFAULT NULL,
+  `limite_credito` float(13,2) DEFAULT '0.00',
+  `fantasia` varchar(100) DEFAULT NULL,
+  `nfe` varchar(1) DEFAULT NULL,
+  `excluido` tinyint(1) DEFAULT 0,
+  
+   CONSTRAINT pk_cliente
+		PRIMARY KEY(cod_cliente),
+	CONSTRAINT fk_cliente_cidade
+		FOREIGN KEY(cod_cidade)
+		REFERENCES cidade(cod_cidade)
+		ON UPDATE RESTRICT
+		ON DELETE RESTRICT
+  
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `produtor` (
+  `cod_produtor` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(50) DEFAULT NULL,
+  `fantasia` varchar(100) DEFAULT NULL,
+  `tipo_pessoa` smallint(6) DEFAULT NULL,
+  `endereco` varchar(60) DEFAULT NULL,
+  `bairro` varchar(30) DEFAULT NULL,
+  `cod_cidade` int(11) DEFAULT NULL,
+  `cep` varchar(9) DEFAULT NULL,
+  `telefone` varchar(15) DEFAULT NULL,
+  `cpf_cnpj` varchar(20) DEFAULT NULL,
+  `rg_ie` varchar(15) DEFAULT NULL,
+  `obs` blob,
+  `usuario` smallint(6) DEFAULT NULL,
+  `bloqueado` char(1) DEFAULT 'F',
+  `excluido` tinyint(1) DEFAULT 0,
+
+   CONSTRAINT pk_produtor
+		PRIMARY KEY(cod_produtor),
+	CONSTRAINT fk_produtor_cidade
+		FOREIGN KEY(cod_cidade)
+		REFERENCES cidade(cod_cidade)
+		ON UPDATE RESTRICT
+		ON DELETE RESTRICT
+
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `produtor_conta` (
+  `cod_produtor_conta` int(11) NOT NULL AUTO_INCREMENT,
+  `cod_produtor` int(11) DEFAULT NULL,
+  `banco` varchar(40) DEFAULT NULL,
+  `agencia` varchar(20) DEFAULT NULL,
+  `conta_corrente` varchar(20) DEFAULT NULL,
+  `titular` varchar(40) DEFAULT NULL,
+  `cpf` varchar(50) DEFAULT NULL,
+  
+   CONSTRAINT pk_produtor_conta
+		PRIMARY KEY(cod_produtor_conta),
+	CONSTRAINT fk_produtor_conta
+		FOREIGN KEY(cod_produtor)
+		REFERENCES produtor(cod_produtor)
+		ON UPDATE RESTRICT
+		ON DELETE RESTRICT
+
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE empresa(
+  `cod_empresa` int(11) NOT NULL AUTO_INCREMENT,
+  `empresa` varchar(50) DEFAULT NULL,
+  `fantasia` varchar(50) DEFAULT NULL,
+  `cnpj` varchar(20) DEFAULT NULL,
+  `ie` varchar(30) DEFAULT NULL,
+  `endereco` varchar(35) DEFAULT NULL,
+  `bairro` varchar(35) DEFAULT NULL,
+  `cod_cidade`int(11) DEFAULT NULL,
+  `cep` varchar(9) DEFAULT NULL,
+  `telefone` varchar(30) DEFAULT NULL,
+  `mensagem` varchar(50) DEFAULT NULL,
+
+ CONSTRAINT pk_empresa
+		PRIMARY KEY(cod_empresa),
+	CONSTRAINT fk_empresa_cidade
+		FOREIGN KEY(cod_cidade)
+		REFERENCES cidade(cod_cidade)
+		ON UPDATE RESTRICT
+		ON DELETE RESTRICT
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
